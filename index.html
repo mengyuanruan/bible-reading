@@ -242,28 +242,24 @@
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>📖 圣经读经打卡</h1>
+                <h1>📖 Bible Reading Checklist</h1>
             </div>
             
             <div class="jump-section">
-                <label class="jump-label">跳到:</label>
+                <label class="jump-label">Jump to:</label>
                 <select class="jump-select" id="daySelector" onchange="jumpToDay()">
-                    <option value="">选择要开始的日期...</option>
+                    <option value="">Select a day to start...</option>
                 </select>
             </div>
             
             <div class="stats">
                 <div class="stat">
-                    <span class="stat-value" id="todayProgress">0/0</span>
-                    <span class="stat-label">今日进度</span>
-                </div>
-                <div class="stat">
                     <span class="stat-value" id="completedDaysDisplay">0</span>
-                    <span class="stat-label">完成天数</span>
+                    <span class="stat-label">Days Completed</span>
                 </div>
                 <div class="stat">
                     <span class="stat-value" id="overallProgress">0%</span>
-                    <span class="stat-label">今年进度</span>
+                    <span class="stat-label">Progress</span>
                 </div>
             </div>
             
@@ -272,9 +268,9 @@
             </div>
             
             <div class="nav">
-                <button class="nav-btn" id="prevBtn" onclick="goToPreviousDay()">← 上一天</button>
-                <button class="nav-btn" id="todayBtn" onclick="goToFirstDay()">回到开始</button>
-                <button class="nav-btn" id="nextBtn" onclick="goToNextDay()">下一天 →</button>
+                <button class="nav-btn" id="prevBtn" onclick="goToPreviousDay()">← Previous Day</button>
+                <button class="nav-btn" id="todayBtn" onclick="goToFirstDay()">Go to Start</button>
+                <button class="nav-btn" id="nextBtn" onclick="goToNextDay()">Next Day →</button>
             </div>
             
             <div id="weekInfo" style="text-align: center; font-weight: 600; margin-bottom: 1.5rem; color: #2c3e50;"></div>
@@ -282,9 +278,9 @@
             <div class="reading-list" id="readingList"></div>
             
             <div class="actions">
-                <button class="btn" onclick="checkPreviousDays()">✓ 一键打卡前面的</button>
-                <button class="btn" onclick="downloadProgress()">📥 导出数据</button>
-                <button class="btn btn-reset" onclick="resetProgress()">🔄 重置</button>
+                <button class="btn" onclick="checkPreviousDays()">✓ Mark Previous Days</button>
+                <button class="btn" onclick="downloadProgress()">📥 Export Data</button>
+                <button class="btn btn-reset" onclick="resetProgress()">🔄 Reset</button>
             </div>
         </div>
     </div>
@@ -598,7 +594,7 @@
         }
 
         function resetProgress() {
-            if (confirm('确定要重置所有打卡记录吗？')) {
+            if (confirm('Reset all reading records? This cannot be undone.')) {
                 for (let i = 0; i < weekData.length; i++) {
                     const dayReadings = expandChapterRange(weekData[i].reading);
                     dayReadings.forEach(r => {
@@ -611,11 +607,11 @@
 
         function checkPreviousDays() {
             if (currentDateIndex === 0) {
-                alert('已经是第一天了');
+                alert('Already at the first day');
                 return;
             }
             
-            if (confirm(`确定要打卡前面 ${currentDateIndex} 天的所有经文吗？`)) {
+            if (confirm(`Mark all ${currentDateIndex} previous days as completed?`)) {
                 // 把第 0 天到第 currentDateIndex-1 天的所有经文都标记为完成
                 for (let i = 0; i < currentDateIndex; i++) {
                     const dayReadings = expandChapterRange(weekData[i].reading);
@@ -635,7 +631,6 @@
             const completedDays = getCompletedDays();
             
             document.getElementById('weekInfo').textContent = `Week ${data.week}-${data.day}`;
-            document.getElementById('todayProgress').textContent = getTodayProgress();
             document.getElementById('completedDaysDisplay').textContent = completedDays;
             document.getElementById('overallProgress').textContent = Math.round(completedDays / 260 * 100) + '%';
             document.getElementById('progressFill').style.width = (completedCount / readings.length * 100) + '%';
