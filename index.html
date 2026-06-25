@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Bible Reading Checklist</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -644,10 +647,10 @@
                 const key = `day-${currentDateIndex}-${reading}`;
                 const isChecked = localStorage.getItem(key) === 'true';
                 readingHTML += `
-                    <div class="reading-item ${isChecked ? 'completed' : ''}" onclick="toggleReading('${reading.replace(/'/g, "\\'")}')">
-                        <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation()">
+                    <div class="reading-item ${isChecked ? 'completed' : ''}">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleReading('${reading.replace(/'/g, "\\'")}')">
                         <span class="text">${reading}</span>
-                        <a href="https://www.youtube.com/@readthroughtheBIBLEwith_Rel/search?query=${encodeURIComponent(reading)}" target="_blank" class="btn-video" onclick="event.stopPropagation()">▶</a>
+                        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(reading + ' readthroughtheBIBLEwith_Rel')}" target="_blank" class="btn-video" onclick="event.stopPropagation()">▶</a>
                     </div>
                 `;
             });
