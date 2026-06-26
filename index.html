@@ -8,292 +8,114 @@
     <meta http-equiv="Expires" content="0">
     <title>Bible Reading Checklist</title>
     <style>
+        .language-switcher { position: fixed; top: 16px; right: 16px; z-index: 1000; display: flex; gap: 6px; }
+        .lang-btn { padding: 8px 14px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+        .lang-btn.active { background: #667eea; color: white; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 2rem 1rem; }
         .container { max-width: 900px; margin: 0 auto; }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 1.2rem;
-        }
-        
-        .header h1 {
-            font-size: 26px;
-            color: #2c3e50;
-            margin-bottom: 0;
-        }
-        
-        .date-info {
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        
-        .jump-section {
-            background: #f8f9fa;
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: flex;
-            gap: 0.8rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .jump-label {
-            font-weight: 600;
-            color: #2c3e50;
-            min-width: 50px;
-            font-size: 14px;
-        }
-        
-        .jump-select {
-            flex: 1;
-            min-width: 200px;
-            padding: 8px;
-            border: 2px solid #667eea;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            background: white;
-        }
-        
-        .jump-select:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            display: block;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            opacity: 0.9;
-            margin-top: 0.3rem;
-        }
-        
-        .nav {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .nav-btn {
-            padding: 8px 12px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-        
-        .nav-btn:hover:not(:disabled) {
-            background: #ecf0f1;
-            border-color: #667eea;
-        }
-        
-        .nav-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .reading-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 1rem;
-        }
-        
-        .reading-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .reading-item:hover {
-            background: #ecf0f1;
-        }
-        
-        .reading-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        
-        .reading-item.completed {
-            background: #d5f4e6;
-            opacity: 0.7;
-        }
-        
-        .reading-item.completed .text {
-            text-decoration: line-through;
-            color: #7f8c8d;
-        }
-        
-        .text {
-            flex: 1;
-            font-size: 14px;
-        }
-        
-        .btn-video {
-            padding: 6px 10px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
-            transition: background 0.2s;
-        }
-        
-        .btn-video:hover {
-            background: #c0392b;
-        }
-        
-        .actions {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 8px 14px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.2s;
-        }
-        
-        .btn:hover {
-            background: #5568d3;
-        }
-        
-        .btn-reset {
-            background: #95a5a6;
-        }
-        
-        .btn-reset:hover {
-            background: #7f8c8d;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #ecf0f1;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.3s ease;
-        }
+        .card { background: white; border-radius: 12px; padding: 1.2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); margin-bottom: 1rem; }
+        .header { text-align: center; margin-bottom: 1.2rem; }
+        .header h1 { font-size: 26px; color: #2c3e50; margin: 0; }
+        .jump-section { background: #f8f9fa; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+        .jump-label { font-weight: 600; color: #2c3e50; min-width: 50px; font-size: 14px; }
+        .jump-select { flex: 1; min-width: 200px; padding: 8px; border: 2px solid #667eea; border-radius: 6px; font-size: 13px; cursor: pointer; background: white; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+        .stat { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 24px; font-weight: bold; display: block; }
+        .stat-label { font-size: 11px; opacity: 0.9; margin-top: 0.3rem; }
+        .progress-bar { width: 100%; height: 6px; background: #ecf0f1; border-radius: 4px; margin-bottom: 0.8rem; overflow: hidden; }
+        #progressFill { height: 100%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); transition: width 0.3s; }
+        .nav { display: flex; gap: 6px; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+        .nav-btn { padding: 8px 12px; background: white; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .nav-btn:hover { background: #667eea; color: white; border-color: #667eea; }
+        .reading-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+        .reading-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .reading-item:hover { background: #ecf0f1; }
+        .reading-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
+        .reading-item.completed { background: #d5f4e6; opacity: 0.7; }
+        .reading-item.completed .text { text-decoration: line-through; color: #7f8c8d; }
+        .text { flex: 1; font-size: 14px; }
+        .btn-video { padding: 6px 10px; background: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; transition: background 0.2s; }
+        .btn-video:hover { background: #c0392b; }
+        .actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 8px 14px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; transition: background 0.2s; }
+        .btn:hover { background: #5568d3; }
+        .btn-reset { background: #95a5a6; }
+        .btn-reset:hover { background: #7f8c8d; }
+        #weekInfo { text-align: center; font-weight: 600; margin-bottom: 1rem; margin-top: 0.8rem; color: #2c3e50; font-size: 16px; }
+        .footer { margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid #ddd; text-align: center; font-size: 11px; color: #7f8c8d; }
+        .footer a { color: #667eea; text-decoration: none; }
     </style>
 </head>
 <body>
+    <div class="language-switcher">
+        <button class="lang-btn active" id="engBtn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" id="chiBtn" onclick="setLanguage('zh')">中文</button>
+    </div>
     <div class="container">
         <div class="card">
-            <div class="header">
-                <h1>📖 Bible Reading Checklist</h1>
-            </div>
-            
+            <div class="header"><h1>📖 Bible Reading Checklist</h1></div>
             <div class="jump-section">
-                <label class="jump-label">Jump to:</label>
+                <label class="jump-label" id="jumpLabel">Jump to:</label>
                 <select class="jump-select" id="daySelector" onchange="jumpToDay()">
                     <option value="">Select a day to start...</option>
                 </select>
             </div>
-            
             <div class="stats">
                 <div class="stat">
                     <span class="stat-value" id="completedDaysDisplay">0</span>
-                    <span class="stat-label">Days Completed</span>
+                    <span class="stat-label" id="completedDaysLabel">Days Completed</span>
                 </div>
                 <div class="stat">
                     <span class="stat-value" id="overallProgress">0%</span>
-                    <span class="stat-label">Progress</span>
+                    <span class="stat-label" id="progressLabel">Progress</span>
                 </div>
             </div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            
+            <div class="progress-bar"><div id="progressFill"></div></div>
             <div class="nav">
                 <button class="nav-btn" id="prevBtn" onclick="goToPreviousDay()">← Previous Day</button>
                 <button class="nav-btn" id="nextBtn" onclick="goToNextDay()">Next Day →</button>
             </div>
-            
-            <div id="weekInfo" style="text-align: center; font-weight: 600; margin-bottom: 1rem; margin-top: 0.8rem; color: #2c3e50; font-size: 16px;"></div>
-            
+            <div id="weekInfo"></div>
             <div class="reading-list" id="readingList"></div>
-            
             <div class="actions">
                 <button class="btn" onclick="checkPreviousDays()">✓ Mark Previous Days</button>
                 <button class="btn" onclick="downloadProgress()">📥 Export Data</button>
                 <button class="btn btn-reset" onclick="resetProgress()">🔄 Reset</button>
             </div>
-            
-            <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid #ddd; text-align: center; font-size: 11px; color: #7f8c8d;">
-                Reference: <a href="https://www.fivedaybiblereading.com/wp-content/uploads/2024/12/2025-5-Day-Bible-Reading_BnW.pdf" target="_blank" style="color: #667eea; text-decoration: none;">Five Day Bible Reading Plan</a>
+            <div class="footer">
+                Reference: <a href="https://www.fivedaybiblereading.com/wp-content/uploads/2024/12/2025-5-Day-Bible-Reading_BnW.pdf" target="_blank">Five Day Bible Reading Plan</a>
             </div>
         </div>
     </div>
-
     <script>
-        // 完整的260天读经计划（2026年1月1日开始）
+        let language = 'en';
+        let currentDateIndex = 0;
+        const texts = {
+            en: { jumpTo: 'Jump to:', selectDay: 'Select a day to start...', daysCompleted: 'Days Completed', progress: 'Progress', previousDay: '← Previous Day', nextDay: 'Next Day →', markPrevious: '✓ Mark Previous Days', exportData: '📥 Export Data', reset: '🔄 Reset', confirmPrevious: (count) => `Mark all ${count} previous days as completed?`, alreadyFirst: 'Already at the first day', resetConfirm: 'Reset all reading records? This cannot be undone.' },
+            zh: { jumpTo: '跳到:', selectDay: '选择要开始的日期...', daysCompleted: '完成天数', progress: '今年进度', previousDay: '← 上一天', nextDay: '下一天 →', markPrevious: '✓ 一键打卡前面的', exportData: '📥 导出数据', reset: '🔄 重置', confirmPrevious: (count) => `确定要打卡前面 ${count} 天的所有经文吗？`, alreadyFirst: '已经是第一天了', resetConfirm: '确定要重置所有打卡记录吗？' }
+        };
+        const scriptureNames = { 'Genesis': '創世記', 'Gen': '創世記', 'Exodus': '出埃及記', 'Ex': '出埃及記', 'Leviticus': '利未記', 'Lev': '利未記', 'Numbers': '民數記', 'Num': '民數記', 'Deuteronomy': '申命記', 'Deut': '申命記', '1 Samuel': '撒母耳記上', '1 Sam': '撒母耳記上', '2 Samuel': '撒母耳記下', '2 Sam': '撒母耳記下', '1 Kings': '列王紀上', '1 Ki': '列王紀上', '1 Kgs': '列王紀上', '2 Kings': '列王紀下', '2 Ki': '列王紀下', '2 Kgs': '列王紀下', '1 Chronicles': '歷代志上', '1 Chr': '歷代志上', '2 Chronicles': '歷代志下', '2 Chr': '歷代志下', 'Ezra': '以斯拉記', 'Ezr': '以斯拉記', 'Nehemiah': '尼希米記', 'Neh': '尼希米記', 'Esther': '以斯帖記', 'Est': '以斯帖記', 'Job': '約伯記', 'Psalm': '詩篇', 'Ps': '詩篇', 'Proverbs': '箴言', 'Prov': '箴言', 'Ecclesiastes': '傳道書', 'Eccl': '傳道書', 'Song of Solomon': '雅歌', 'Song': '雅歌', 'Isaiah': '以賽亞書', 'Isa': '以賽亞書', 'Jeremiah': '耶利米書', 'Jer': '耶利米書', 'Lamentations': '耶利米哀歌', 'Lam': '耶利米哀歌', 'Ezekiel': '以西結書', 'Eze': '以西結書', 'Daniel': '但以理書', 'Dan': '但以理書', 'Hosea': '何西亞書', 'Hos': '何西亞書', 'Joel': '約珥書', 'Amos': '阿摩司書', 'Obadiah': '俄巴底亞書', 'Oba': '俄巴底亞書', 'Jonah': '約拿書', 'Micah': '彌迦書', 'Mic': '彌迦書', 'Nahum': '那鴻書', 'Nah': '那鴻書', 'Habakkuk': '哈巴谷書', 'Hab': '哈巴谷書', 'Zephaniah': '西番雅書', 'Zep': '西番雅書', 'Haggai': '哈該書', 'Hag': '哈該書', 'Zechariah': '撒迦利亞書', 'Zec': '撒迦利亞書', 'Malachi': '瑪拉基書', 'Mal': '瑪拉基書', 'Matthew': '馬太福音', 'Mt': '馬太福音', 'Mark': '馬可福音', 'Mk': '馬可福音', 'Luke': '路加福音', 'Lk': '路加福音', 'John': '約翰福音', 'Jn': '約翰福音', 'Acts': '使徒行傳', 'Act': '使徒行傳', 'Romans': '羅馬書', 'Rom': '羅馬書', '1 Corinthians': '哥林多前書', '1 Cor': '哥林多前書', '2 Corinthians': '哥林多後書', '2 Cor': '哥林多後書', 'Galatians': '加拉太書', 'Gal': '加拉太書', 'Ephesians': '以弗所書', 'Eph': '以弗所書', 'Philippians': '腓立比書', 'Phil': '腓立比書', 'Colossians': '歌羅西書', 'Col': '歌羅西書', '1 Thessalonians': '帖撒羅尼迦前書', '1 Th': '帖撒羅尼迦前書', '1 Thess': '帖撒羅尼迦前書', '2 Thessalonians': '帖撒羅尼迦後書', '2 Th': '帖撒羅尼迦後書', '2 Thess': '帖撒羅尼迦後書', '1 Timothy': '提摩太前書', '1 Ti': '提摩太前書', '1 Tim': '提摩太前書', '2 Timothy': '提摩太後書', '2 Ti': '提摩太後書', '2 Tim': '提摩太後書', 'Titus': '提多書', 'Tit': '提多書', 'Philemon': '腓利門書', 'Phm': '腓利門書', 'Hebrews': '希伯來書', 'Heb': '希伯來書', 'James': '雅各書', 'Jas': '雅各書', '1 Peter': '彼得前書', '1 Pet': '彼得前書', '2 Peter': '彼得後書', '2 Pet': '彼得後書', '1 John': '約翰一書', '1 Jn': '約翰一書', '2 John': '約翰二書', '2 Jn': '約翰二書', '3 John': '約翰三書', '3 Jn': '約翰三書', 'Jude': '猶大書', 'Revelation': '啟示錄', 'Rev': '啟示錄' };
+        function getText(key) { return texts[language][key]; }
+        function setLanguage(lang) { language = lang; localStorage.setItem('bibleReadingLanguage', lang); document.getElementById('engBtn').classList.toggle('active', lang === 'en'); document.getElementById('chiBtn').classList.toggle('active', lang === 'zh'); updateUIText(); render(); }
+        function convertScriptureToZh(reading) { if (language !== 'zh') return reading; let result = reading; const sortedNames = Object.keys(scriptureNames).sort((a, b) => b.length - a.length); sortedNames.forEach(eng => { const regex = new RegExp('\\b' + eng.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g'); result = result.replace(regex, scriptureNames[eng]); }); return result; }
+        function getYouTubeSearchUrl(reading) { if (language === 'zh') { const zhReading = convertScriptureToZh(reading); const formatted = zhReading.replace(/\s+/g, ''); const withUnit = formatted.match(/[篇卷部]$/) ? formatted : formatted + '章'; return `https://www.youtube.com/results?search_query=${encodeURIComponent(withUnit + ' 陪你讀聖經')}`; } else { return `https://www.youtube.com/results?search_query=${encodeURIComponent(reading + ' NIV read through the BIBLE with Rel')}`; } }
+        function updateUIText() { if (document.getElementById('jumpLabel')) document.getElementById('jumpLabel').textContent = getText('jumpTo'); if (document.getElementById('daySelector') && document.getElementById('daySelector').options[0]) document.getElementById('daySelector').options[0].text = getText('selectDay'); if (document.getElementById('completedDaysLabel')) document.getElementById('completedDaysLabel').textContent = getText('daysCompleted'); if (document.getElementById('progressLabel')) document.getElementById('progressLabel').textContent = getText('progress'); if (document.getElementById('prevBtn')) document.getElementById('prevBtn').textContent = getText('previousDay'); if (document.getElementById('nextBtn')) document.getElementById('nextBtn').textContent = getText('nextDay'); }
+        function expandChapterRange(reading) { const parts = reading.split(/[,;]/).map(s => s.trim()); const expanded = []; parts.forEach(part => { const match = part.match(/^(.+)\s+(\d+)-(\d+)$/); if (match) { const [, book, start, end] = match; for (let i = parseInt(start); i <= parseInt(end); i++) expanded.push(`${book} ${i}`); } else { expanded.push(part); } }); return expanded; }
+        function initializeToToday() { for (let i = weekData.length - 1; i >= 0; i--) { const readings = expandChapterRange(weekData[i].reading); let allCompleted = true; for (let reading of readings) { if (localStorage.getItem(`day-${i}-${reading}`) !== 'true') { allCompleted = false; break; } } if (allCompleted) { currentDateIndex = Math.min(i + 1, weekData.length - 1); return; } } currentDateIndex = 0; }
+        function toggleReading(reading) { const key = `day-${currentDateIndex}-${reading}`; const isChecked = localStorage.getItem(key) === 'true'; localStorage.setItem(key, !isChecked); render(); }
+        function getCompletedDays() { let count = 0; for (let i = 0; i < weekData.length; i++) { const readings = expandChapterRange(weekData[i].reading); let allCompleted = true; for (let reading of readings) { if (localStorage.getItem(`day-${i}-${reading}`) !== 'true') { allCompleted = false; break; } } if (allCompleted) count++; } return count; }
+        function populateDaySelector() { const selector = document.getElementById('daySelector'); for (let i = 0; i < weekData.length; i++) { const option = document.createElement('option'); option.value = i; option.text = `Week ${weekData[i].week}-${weekData[i].day}`; selector.appendChild(option); } }
+        function jumpToDay() { const index = document.getElementById('daySelector').value; if (index !== '') { currentDateIndex = parseInt(index); render(); } }
+        function goToPreviousDay() { if (currentDateIndex > 0) { currentDateIndex--; render(); } }
+        function goToNextDay() { if (currentDateIndex < weekData.length - 1) { currentDateIndex++; render(); } }
+        function checkPreviousDays() { if (currentDateIndex === 0) { alert(getText('alreadyFirst')); return; } if (confirm(getText('confirmPrevious')(currentDateIndex))) { for (let i = 0; i < currentDateIndex; i++) { const dayReadings = expandChapterRange(weekData[i].reading); dayReadings.forEach(r => { localStorage.setItem(`day-${i}-${r}`, 'true'); }); } render(); } }
+        function resetProgress() { if (confirm(getText('resetConfirm'))) { for (let i = 0; i < weekData.length; i++) { const dayReadings = expandChapterRange(weekData[i].reading); dayReadings.forEach(r => { localStorage.removeItem(`day-${i}-${r}`); }); } render(); } }
+        function downloadProgress() { let csv = 'Day,Week,Scripture,Completed\n'; for (let i = 0; i < weekData.length; i++) { const readings = expandChapterRange(weekData[i].reading); readings.forEach(r => { const isChecked = localStorage.getItem(`day-${i}-${r}`) === 'true' ? 'Yes' : 'No'; csv += `${i + 1},${weekData[i].week}-${weekData[i].day},"${r}",${isChecked}\n`; }); } const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'bible-reading-progress.csv'; a.click(); URL.revokeObjectURL(url); }
+        function render() { const data = weekData[currentDateIndex]; const readings = expandChapterRange(data.reading); const completedCount = readings.filter(r => localStorage.getItem(`day-${currentDateIndex}-${r}`) === 'true').length; const completedDays = getCompletedDays(); document.getElementById('weekInfo').textContent = `Week ${data.week}-${data.day}`; document.getElementById('completedDaysDisplay').textContent = completedDays; document.getElementById('overallProgress').textContent = Math.round(completedDays / 260 * 100) + '%'; document.getElementById('progressFill').style.width = (completedCount / readings.length * 100) + '%'; let readingHTML = ''; readings.forEach(reading => { const key = `day-${currentDateIndex}-${reading}`; const isChecked = localStorage.getItem(key) === 'true'; readingHTML += `<div class="reading-item ${isChecked ? 'completed' : ''}"><input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleReading('${reading.replace(/'/g, "\\'")}')"><span class="text">${convertScriptureToZh(reading)}</span><a href="${getYouTubeSearchUrl(reading)}" target="_blank" class="btn-video" onclick="event.stopPropagation()">▶</a></div>`; }); document.getElementById('readingList').innerHTML = readingHTML; document.getElementById('prevBtn').disabled = currentDateIndex === 0; document.getElementById('nextBtn').disabled = currentDateIndex === weekData.length - 1; }
+        language = localStorage.getItem('bibleReadingLanguage') || 'en';
+        if (language === 'zh') { document.getElementById('engBtn').classList.remove('active'); document.getElementById('chiBtn').classList.add('active'); }
         const weekData = [
             { week: 1, day: 1, reading: "Genesis 1-2; Psalm 19; Mark 1", date: "2026-01-01" },
             { week: 1, day: 2, reading: "Gen 3-5; Mark 2", date: "2026-01-02" },
@@ -381,22 +203,22 @@
             { week: 17, day: 4, reading: "1 Sam 15-16; 1 Chr 1; Ps 39; Acts 11", date: "2026-03-25" },
             { week: 17, day: 5, reading: "1 Sam 17; 1 Chr 2; Acts 12", date: "2026-03-26" },
             { week: 18, day: 1, reading: "1 Sam 18-19; 1 Chr 3; Ps 59; Acts 13", date: "2026-03-27" },
-            { week: 18, day: 2, reading: "1 Sa 20; 1 Chr 4; Ps 56; Ps 57; Ps 142; Acts 14", date: "2026-03-28" },
+            { week: 18, day: 2, reading: "1 Sa 20;1 Chr 4; Ps 56, 57, 142; Acts 14", date: "2026-03-28" },
             { week: 18, day: 3, reading: "1 Sam 21-22; 1 Chr 5; Ps 52; Acts 15", date: "2026-03-29" },
             { week: 18, day: 4, reading: "1 Sam 23-24; 1 Chr 6; Ps 54; Acts 16", date: "2026-03-30" },
             { week: 18, day: 5, reading: "1 Sam 25; 1 Chr 7; Acts 17", date: "2026-03-31" },
             { week: 19, day: 1, reading: "1 Sam 26-27; 1 Chr 8; Acts 18", date: "2026-04-01" },
             { week: 19, day: 2, reading: "1 Sam 28-29; 1 Chr 9; Acts 19", date: "2026-04-02" },
             { week: 19, day: 3, reading: "1 Sam 30-31; 1 Chr 10; Acts 20", date: "2026-04-03" },
-            { week: 19, day: 4, reading: "2 Sam 1-2; 1 Chr 11; Ps 96; Ps 106; Acts 21", date: "2026-04-04" },
+            { week: 19, day: 4, reading: "2 Sam 1-2; 1 Chr 11; Ps 96, 106; Acts 21", date: "2026-04-04" },
             { week: 19, day: 5, reading: "2 Sam 3-5; 1 Chr 12; Ps 122; Acts 22", date: "2026-04-05" },
             { week: 20, day: 1, reading: "2 Sam 6; 1 Chr 13; Ps 60; Acts 23", date: "2026-04-06" },
             { week: 20, day: 2, reading: "1 Chron 14-16; Acts 24", date: "2026-04-07" },
             { week: 20, day: 3, reading: "2 Sam 7-8; 1 Chr 17; Ps 132; Acts 25", date: "2026-04-08" },
             { week: 20, day: 4, reading: "2 Sam 9-10; 1 Chr 18-19; Ps 89; Acts 26", date: "2026-04-09" },
-            { week: 20, day: 5, reading: "2 Sam 11-12; 1 Chr 20; Ps 51; Ps 32; Acts 27", date: "2026-04-10" },
+            { week: 20, day: 5, reading: "2 Sam 11-12; 1 Chr 20; Ps 51, 32; Acts 27", date: "2026-04-10" },
             { week: 21, day: 1, reading: "2 Samuel 13-14; Acts 28", date: "2026-04-11" },
-            { week: 21, day: 2, reading: "2 Sam 15-17; Psalms 3; Psalms 63; Romans 1", date: "2026-04-12" },
+            { week: 21, day: 2, reading: "2 Sam 15-17; Psalms 3, 63; Romans 1", date: "2026-04-12" },
             { week: 21, day: 3, reading: "2 Sam 18-20; Psalm 34; Romans 2", date: "2026-04-13" },
             { week: 21, day: 4, reading: "2 Sam 21-23; Psalm 18; Romans 3", date: "2026-04-14" },
             { week: 21, day: 5, reading: "2 Sam 24; 1 Chr 21; Romans 4", date: "2026-04-15" },
@@ -470,223 +292,95 @@
             { week: 35, day: 3, reading: "Isa 30-32; 1 Cor 5", date: "2026-06-22" },
             { week: 35, day: 4, reading: "Isa 33-35; 1 Cor 6", date: "2026-06-23" },
             { week: 35, day: 5, reading: "2 Chr 28; 2 Kings 17; Ps 66; 1 Cor 7", date: "2026-06-24" },
-            { week: 36, day: 1, reading: "2 Chr 29-31; 1 Corinthians 8", date: "2026-06-25" }
-        ];
-
-        let currentDateIndex = 0;
-
-        function initializeToToday() {
-            // 从最后往前找，找到最后一个完成的日期
-            for (let i = weekData.length - 1; i >= 0; i--) {
-                const readings = expandChapterRange(weekData[i].reading);
-                let allCompleted = true;
-                
-                for (let reading of readings) {
-                    if (localStorage.getItem(`day-${i}-${reading}`) !== 'true') {
-                        allCompleted = false;
-                        break;
-                    }
-                }
-                
-                if (allCompleted) {
-                    // 找到了最后一个完成的日期，跳到下一天
-                    currentDateIndex = Math.min(i + 1, weekData.length - 1);
-                    return;
-                }
-            }
-            
-            // 如果没有任何日期完成，就从第一天开始
-            currentDateIndex = 0;
-        }
-
-        function expandChapterRange(reading) {
-            const parts = reading.split(/[,;]/).map(s => s.trim());
-            const expanded = [];
-            
-            parts.forEach(part => {
-                // 改进的正则：(.+) 贪心匹配书名 + \s+ 要求至少一个空格 + 数字范围
-                const match = part.match(/^(.+)\s+(\d+)-(\d+)$/);
-                if (match) {
-                    const book = match[1].trim();
-                    const start = parseInt(match[2]);
-                    const end = parseInt(match[3]);
-                    for (let i = start; i <= end; i++) {
-                        expanded.push(`${book} ${i}`);
-                    }
-                } else {
-                    // 没有范围的就直接加
-                    expanded.push(part);
-                }
-            });
-            
-            return expanded;
-        }
-
-        function populateDaySelector() {
-            const selector = document.getElementById('daySelector');
-            weekData.forEach((item, idx) => {
-                const option = document.createElement('option');
-                option.value = idx;
-                option.textContent = `Week ${item.week}-${item.day}`;
-                selector.appendChild(option);
-            });
-        }
-
-        function jumpToDay() {
-            const selector = document.getElementById('daySelector');
-            if (selector.value !== '') {
-                currentDateIndex = parseInt(selector.value);
-                render();
-            }
-        }
-
-        function toggleReading(reading) {
-            const key = `day-${currentDateIndex}-${reading}`;
-            const isChecked = localStorage.getItem(key) === 'true';
-            localStorage.setItem(key, isChecked ? 'false' : 'true');
-            render();
-        }
-
-        function formatDate(dateStr) {
-            const date = new Date(dateStr + 'T00:00:00');
-            const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('zh-CN', options);
-        }
-
-        function goToPreviousDay() {
-            if (currentDateIndex > 0) {
-                currentDateIndex--;
-                document.getElementById('daySelector').value = currentDateIndex;
-                render();
-            }
-        }
-
-        function goToNextDay() {
-            if (currentDateIndex < weekData.length - 1) {
-                currentDateIndex++;
-                document.getElementById('daySelector').value = currentDateIndex;
-                render();
-            }
-        }
-
-        function goToFirstDay() {
-            currentDateIndex = 0;
-            document.getElementById('daySelector').value = 0;
-            render();
-        }
-
-        function getCompletedCount() {
-            let count = 0;
-            for (let i = 0; i < weekData.length; i++) {
-                const dayReadings = expandChapterRange(weekData[i].reading);
-                dayReadings.forEach(r => {
-                    if (localStorage.getItem(`day-${i}-${r}`) === 'true') {
-                        count++;
-                    }
-                });
-            }
-            return count;
-        }
-
-        function getCompletedDays() {
-            let days = 0;
-            for (let i = 0; i < weekData.length; i++) {
-                const dayReadings = expandChapterRange(weekData[i].reading);
-                const allCompleted = dayReadings.every(r => localStorage.getItem(`day-${i}-${r}`) === 'true');
-                if (allCompleted) days++;
-            }
-            return days;
-        }
-
-        function getTodayProgress() {
-            const dayReadings = expandChapterRange(weekData[currentDateIndex].reading);
-            const completed = dayReadings.filter(r => localStorage.getItem(`day-${currentDateIndex}-${r}`) === 'true').length;
-            return `${completed}/${dayReadings.length}`;
-        }
-
-        function downloadProgress() {
-            let csv = 'Date,Week,Day,Reading,Completed\n';
-            weekData.forEach((item, idx) => {
-                const readings = expandChapterRange(item.reading);
-                readings.forEach(reading => {
-                    const key = `day-${idx}-${reading}`;
-                    const completed = localStorage.getItem(key) === 'true' ? '✓' : '';
-                    csv += `"${item.date}","W${item.week}","D${item.day}","${reading}","${completed}"\n`;
-                });
-            });
-            
-            const element = document.createElement('a');
-            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
-            element.setAttribute('download', 'bible_reading_progress.csv');
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        }
-
-        function resetProgress() {
-            if (confirm('Reset all reading records? This cannot be undone.')) {
-                for (let i = 0; i < weekData.length; i++) {
-                    const dayReadings = expandChapterRange(weekData[i].reading);
-                    dayReadings.forEach(r => {
-                        localStorage.removeItem(`day-${i}-${r}`);
-                    });
-                }
-                render();
-            }
-        }
-
-        function checkPreviousDays() {
-            if (currentDateIndex === 0) {
-                alert('Already at the first day');
-                return;
-            }
-            
-            if (confirm(`Mark all ${currentDateIndex} previous days as completed?`)) {
-                // 把第 0 天到第 currentDateIndex-1 天的所有经文都标记为完成
-                for (let i = 0; i < currentDateIndex; i++) {
-                    const dayReadings = expandChapterRange(weekData[i].reading);
-                    dayReadings.forEach(r => {
-                        localStorage.setItem(`day-${i}-${r}`, 'true');
-                    });
-                }
-                render();
-            }
-        }
-
-        function render() {
-            const data = weekData[currentDateIndex];
-            const readings = expandChapterRange(data.reading);
-            const completedCount = readings.filter(r => localStorage.getItem(`day-${currentDateIndex}-${r}`) === 'true').length;
-            const totalCompleted = getCompletedCount();
-            const completedDays = getCompletedDays();
-            
-            document.getElementById('weekInfo').textContent = `Week ${data.week}-${data.day}`;
-            document.getElementById('completedDaysDisplay').textContent = completedDays;
-            document.getElementById('overallProgress').textContent = Math.round(completedDays / 260 * 100) + '%';
-            document.getElementById('progressFill').style.width = (completedCount / readings.length * 100) + '%';
-            
-            let readingHTML = '';
-            readings.forEach(reading => {
-                const key = `day-${currentDateIndex}-${reading}`;
-                const isChecked = localStorage.getItem(key) === 'true';
-                readingHTML += `
-                    <div class="reading-item ${isChecked ? 'completed' : ''}">
-                        <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleReading('${reading.replace(/'/g, "\\'")}')">
-                        <span class="text">${reading}</span>
-                        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(reading + ' NIV read through the BIBLE with Rel')}" target="_blank" class="btn-video" onclick="event.stopPropagation()">▶</a>
-                    </div>
-                `;
-            });
-            document.getElementById('readingList').innerHTML = readingHTML;
-            
-            document.getElementById('prevBtn').disabled = currentDateIndex === 0;
-            document.getElementById('nextBtn').disabled = currentDateIndex === weekData.length - 1;
-        }
-
-        // 初始化
+            { week: 36, day: 1, reading: "2 Chr 29-31; 1 Corinthians 8", date: "2026-06-25" },
+            { week: 36, day: 2, reading: "2 Kings 18-19; 2 Chr 32; Ps 67; 1 Cor 9", date: "2026-06-26" },
+            { week: 36, day: 3, reading: "Isaiah 36-37; Ps 123; 1 Cor 10", date: "2026-06-27" },
+            { week: 36, day: 4, reading: "2 Kings 20; Isa 38-40; Ps 68; 1 Cor 11", date: "2026-06-28" },
+            { week: 36, day: 5, reading: "Isa 41-44; 1 Cor 12", date: "2026-06-29" },
+            { week: 37, day: 1, reading: "Isaiah 45-48; 1 Corinthians 13", date: "2026-06-30" },
+            { week: 37, day: 2, reading: "Isa 49-52; Psalm 69; 1 Cor 14", date: "2026-07-01" },
+            { week: 37, day: 3, reading: "Isa 53-55; Psalm 128; 1 Cor15", date: "2026-07-02" },
+            { week: 37, day: 4, reading: "Isa 56-59; Psalm 70; 1 Cor 16", date: "2026-07-03" },
+            { week: 37, day: 5, reading: "Isa 60-63; 2 Cor 1", date: "2026-07-04" },
+            { week: 38, day: 1, reading: "Isaiah 64-66; 2 Corinthians 2", date: "2026-07-05" },
+            { week: 38, day: 2, reading: "2 Kings 21; 2 Chr 33; Ps 71; 2 Cor 3", date: "2026-07-06" },
+            { week: 38, day: 3, reading: "Nahum 1-3; Psalm 149; 2 Cor 4", date: "2026-07-07" },
+            { week: 38, day: 4, reading: "2 Kings 22-23; Psalm 73; 2 Cor 5", date: "2026-07-08" },
+            { week: 38, day: 5, reading: "2 Chr 34-35; 2 Cor 6", date: "2026-07-09" },
+            { week: 39, day: 1, reading: "Habakkuk 1-3; 2 Corinthians 7", date: "2026-07-10" },
+            { week: 39, day: 2, reading: "Zephaniah 1-3; Psalm 74; 2 Cor 8", date: "2026-07-11" },
+            { week: 39, day: 3, reading: "Jeremiah 1-4; Psalm 130; 2 Cor 9", date: "2026-07-12" },
+            { week: 39, day: 4, reading: "Jer 5-7; Psalm 75; 2 Cor 10", date: "2026-07-13" },
+            { week: 39, day: 5, reading: "Jer 8-10; 2 Cor 11", date: "2026-07-14" },
+            { week: 40, day: 1, reading: "Jeremiah 11-13; 2 Corinthians 12", date: "2026-07-15" },
+            { week: 40, day: 2, reading: "Jer 14-16; Psalm 76; 2 Cor 13", date: "2026-07-16" },
+            { week: 40, day: 3, reading: "Jer 17-20; James 1", date: "2026-07-17" },
+            { week: 40, day: 4, reading: "Jer 22, 23, 26; Psalm 77; James 2", date: "2026-07-18" },
+            { week: 40, day: 5, reading: "Jer 25, 35, 36, 45; Ps 133; James 3", date: "2026-07-19" },
+            { week: 41, day: 1, reading: "Jeremiah 27, 28, 29, 24; James 4", date: "2026-07-20" },
+            { week: 41, day: 2, reading: "Jer 37, 21, 34; Psalm 79; James 5", date: "2026-07-21" },
+            { week: 41, day: 3, reading: "Jer 30-33; 1 Peter 1", date: "2026-07-22" },
+            { week: 41, day: 4, reading: "Jer 38, 39, 52; 1 Pet 2", date: "2026-07-23" },
+            { week: 41, day: 5, reading: "2 Kin 24-25; 2 Chr 36; Ps 126; 1 Pet 3", date: "2026-07-24" },
+            { week: 42, day: 1, reading: "Lamentations 1-5; Ps 137; 1 Pet 4", date: "2026-07-25" },
+            { week: 42, day: 2, reading: "Obadiah; Jer 40-42; Ps 147; 1 Pet 5", date: "2026-07-26" },
+            { week: 42, day: 3, reading: "Jeremiah 43, 44, 46; 2 Peter 1", date: "2026-07-27" },
+            { week: 42, day: 4, reading: "Jer 47, 48, 49; Ps 80; 2 Peter 2", date: "2026-07-28" },
+            { week: 42, day: 5, reading: "Jer 50-51; 2 Peter 3", date: "2026-07-29" },
+            { week: 43, day: 1, reading: "Ezekiel 1-3; John 1", date: "2026-07-30" },
+            { week: 43, day: 2, reading: "Ezekiel 4-6; Psalm 82; John 2", date: "2026-07-31" },
+            { week: 43, day: 3, reading: "Ezekiel 7-9; John 3", date: "2026-08-01" },
+            { week: 43, day: 4, reading: "Ezekiel 10-12; Psalm 83; John 4", date: "2026-08-02" },
+            { week: 43, day: 5, reading: "Ezekiel 13-15; Psalm 136; John 5", date: "2026-08-03" },
+            { week: 44, day: 1, reading: "Ezekiel 16-18; John 6", date: "2026-08-04" },
+            { week: 44, day: 2, reading: "Ezekiel 19-21; Psalm 84; John 7", date: "2026-08-05" },
+            { week: 44, day: 3, reading: "Ezekiel 22-24; Psalm 134; John 8", date: "2026-08-06" },
+            { week: 44, day: 4, reading: "Ezekiel 25-27; Psalm 85; John 9", date: "2026-08-07" },
+            { week: 44, day: 5, reading: "Ezekiel 28-30; John 10", date: "2026-08-08" },
+            { week: 45, day: 1, reading: "Ezekiel 31-33; John 11", date: "2026-08-09" },
+            { week: 45, day: 2, reading: "Ezekiel 34-36; Psalm 86; John 12", date: "2026-08-10" },
+            { week: 45, day: 3, reading: "Ezekiel 37-39; Psalm 87; John 13", date: "2026-08-11" },
+            { week: 45, day: 4, reading: "Ezekiel 40-42; John 14", date: "2026-08-12" },
+            { week: 45, day: 5, reading: "Ezekiel 43-45; Psalm 135; John 15", date: "2026-08-13" },
+            { week: 46, day: 1, reading: "Ezekiel 46-48; John 16", date: "2026-08-14" },
+            { week: 46, day: 2, reading: "Daniel 1-3; Psalm 88; John 17", date: "2026-08-15" },
+            { week: 46, day: 3, reading: "Daniel 4-6; John 18", date: "2026-08-16" },
+            { week: 46, day: 4, reading: "Daniel 7-9; Psalm 91; John 19", date: "2026-08-17" },
+            { week: 46, day: 5, reading: "Daniel 10-12; John 20", date: "2026-08-18" },
+            { week: 47, day: 1, reading: "Ezra 1-2; John 21", date: "2026-08-19" },
+            { week: 47, day: 2, reading: "Ezra 3-4; Psalm 92; 1 John 1", date: "2026-08-20" },
+            { week: 47, day: 3, reading: "Haggai; Zechariah 1; Ps 138; 1 John 2", date: "2026-08-21" },
+            { week: 47, day: 4, reading: "Zechariah 2-5; Psalm 93; 1 John 3", date: "2026-08-22" },
+            { week: 47, day: 5, reading: "Zechariah 6-8; 1 John 4", date: "2026-08-23" },
+            { week: 48, day: 1, reading: "Zechariah 9-11; 1 John 5", date: "2026-08-24" },
+            { week: 48, day: 2, reading: "Zechariah 12-14; Psalm 94; 2 John", date: "2026-08-25" },
+            { week: 48, day: 3, reading: "Ezra 5-6; Psalm 95; 3 John", date: "2026-08-26" },
+            { week: 48, day: 4, reading: "Esther 1-3; Psalm 139; Revelation 1", date: "2026-08-27" },
+            { week: 48, day: 5, reading: "Esther 4-6; Revelation 2", date: "2026-08-28" },
+            { week: 49, day: 1, reading: "Esther 7-10; Revelation 3", date: "2026-08-29" },
+            { week: 49, day: 2, reading: "Ezra 7-10; Psalm 97; Revelation 4", date: "2026-08-30" },
+            { week: 49, day: 3, reading: "Nehemiah 1-3; Revelation 5", date: "2026-08-31" },
+            { week: 49, day: 4, reading: "Neh 4-6; Psalm 98; Revelation 6", date: "2026-09-01" },
+            { week: 49, day: 5, reading: "Neh 7-9; Psalm 140; Revelation 7", date: "2026-09-02" },
+            { week: 50, day: 1, reading: "Neh 10-13; Revelation 8", date: "2026-09-03" },
+            { week: 50, day: 2, reading: "Malachi; Psalm 2; Revelation 9", date: "2026-09-04" },
+            { week: 50, day: 3, reading: "Job 1-3; Psalm 29; Revelation 10", date: "2026-09-05" },
+            { week: 50, day: 4, reading: "Job 4-7; Psalm 99; Revelation 11", date: "2026-09-06" },
+            { week: 50, day: 5, reading: "Job 8-11; Revelation 12", date: "2026-09-07" },
+            { week: 51, day: 1, reading: "Job 12-14; Psalm 100; Revelation 13", date: "2026-09-08" },
+            { week: 51, day: 2, reading: "Job 15-17; Revelation 14", date: "2026-09-09" },
+            { week: 51, day: 3, reading: "Job 18-20; Psalm 141; Revelation 15", date: "2026-09-10" },
+            { week: 51, day: 4, reading: "Job 21-23; Psalm 101; Revelation 16", date: "2026-09-11" },
+            { week: 51, day: 5, reading: "Job 24-27; Revelation 17", date: "2026-09-12" },
+            { week: 52, day: 1, reading: "Job 28-30; Revelation 18", date: "2026-09-13" },
+            { week: 52, day: 2, reading: "Job 31-33; Psalm 102; Revelation 19", date: "2026-09-14" },
+            { week: 52, day: 3, reading: "Job 34-36; Revelation 20", date: "2026-09-15" },
+            { week: 52, day: 4, reading: "Job 37-39; Psalm 103; Revelation 21", date: "2026-09-16" },
+            { week: 52, day: 5, reading: "Job 40-42; Psalm 150; Revelation 22", date: "2026-09-17" }
+                ];
         initializeToToday();
         populateDaySelector();
+        updateUIText();
         render();
     </script>
 </body>
