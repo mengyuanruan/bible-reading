@@ -475,6 +475,30 @@
 
         let currentDateIndex = 0;
 
+        function initializeToToday() {
+            // 从最后往前找，找到最后一个完成的日期
+            for (let i = weekData.length - 1; i >= 0; i--) {
+                const readings = expandChapterRange(weekData[i].reading);
+                let allCompleted = true;
+                
+                for (let reading of readings) {
+                    if (localStorage.getItem(`day-${i}-${reading}`) !== 'true') {
+                        allCompleted = false;
+                        break;
+                    }
+                }
+                
+                if (allCompleted) {
+                    // 找到了最后一个完成的日期，跳到下一天
+                    currentDateIndex = Math.min(i + 1, weekData.length - 1);
+                    return;
+                }
+            }
+            
+            // 如果没有任何日期完成，就从第一天开始
+            currentDateIndex = 0;
+        }
+
         function expandChapterRange(reading) {
             const parts = reading.split(/[,;]/).map(s => s.trim());
             const expanded = [];
@@ -661,6 +685,7 @@
         }
 
         // 初始化
+        initializeToToday();
         populateDaySelector();
         render();
     </script>
